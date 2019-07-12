@@ -171,6 +171,16 @@ void NDIReceiver::alsa_out_function() {
             if ((ret = snd_pcm_writei(pcm_handle, out_buff, frame)) == -EPIPE) {
                 //snd_pcm_prepare(pcm_handle);
                 snd_pcm_recover(pcm_handle, ret, 0);
+                m.lock();
+                queue_size = buff_queue->size();
+                m.unlock();
+                cout << queue_size << endl;
+                do {
+                    m.lock();
+                    queue_size = buff_queue->size();
+                    m.unlock();
+                    usleep(1000);
+                } while (queue_size < buff_size * 5);
             } else if (ret < 0) {
                 throw runtime_error(string("ERROR. Can't write to PCM device.") + snd_strerror(ret));
             }
