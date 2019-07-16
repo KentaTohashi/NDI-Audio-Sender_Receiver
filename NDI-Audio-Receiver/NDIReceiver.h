@@ -19,7 +19,7 @@ public:
     virtual ~NDIReceiver();
 
 public:
-    NDIReceiver();
+    explicit NDIReceiver(int ch);
 
 private:
 

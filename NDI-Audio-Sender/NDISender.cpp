@@ -4,11 +4,11 @@
 
 #include "NDISender.h"
 
-NDISender::NDISender() : NDISender(DEFAULT_RATE, DEFAULT_CHANNELS) {
+NDISender::NDISender(int ch) : NDISender(ch, DEFAULT_RATE, DEFAULT_CHANNELS) {
 
 }
 
-NDISender::NDISender(unsigned int rate, int channels) {
+NDISender::NDISender(int ch, unsigned int rate, int channels) {
     pcm_handle = nullptr;
     frames = 1024;
     this->channels = channels;
@@ -54,7 +54,8 @@ NDISender::NDISender(unsigned int rate, int channels) {
 
     record_buff = (uint8_t *) malloc(sizeof(uint8_t) * buff_size);
     send_buff = (uint8_t *) malloc(sizeof(uint8_t) * buff_size);
-    NDI_send_create_desc.p_ndi_name = "My 16bpp Audio"; // 送信インスタンス
+    string instance_name = "Audio" + to_string(ch);
+    NDI_send_create_desc.p_ndi_name = instance_name.c_str(); // 送信インスタンス
     NDI_send_create_desc.clock_video = false; // 送信時間を同期させるかどうか
     NDI_send_create_desc.clock_audio = true; // 送信時間を同期させるかどうか
     m_pNDI_send = NDIlib_send_create(&NDI_send_create_desc); // NDI送信インスタンス生成

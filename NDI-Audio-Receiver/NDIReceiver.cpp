@@ -5,7 +5,7 @@
 #include <cstring>
 #include "NDIReceiver.h"
 
-NDIReceiver::NDIReceiver() {
+NDIReceiver::NDIReceiver(int ch) {
     //メンバ変数初期化
     pcm_handle = nullptr;
     buff_queue = new queue<uint8_t>();
@@ -18,6 +18,8 @@ NDIReceiver::NDIReceiver() {
     const NDIlib_source_t *p_sources;
     uint32_t no_sources;
     string str_findname;
+    buff_size = 0;
+    frame = 0;
     // 生成チェック
     if (!pNDI_find) {
         throw runtime_error("NDIlib_find_instance_t create failure.");
@@ -30,7 +32,7 @@ NDIReceiver::NDIReceiver() {
         for (int i = 0; i < (int) no_sources; i++) {
             str_findname = string(p_sources[i].p_ndi_name); // 発見したリソース名の格納
 
-            if (str_findname.find("My 16bpp Audio") != -1) {
+            if (str_findname.find("Audio" + to_string(ch)) != -1) {
                 cout << "HIT" << endl;
                 this->NDI_recv_create_desc.source_to_connect_to = p_sources[i];
                 exit_find_loop = true; // ループ終了フラグオン
@@ -190,3 +192,4 @@ void NDIReceiver::alsa_out_function() {
     }
 
 }
+

@@ -19,9 +19,9 @@ using namespace std;
 
 class NDISender {
 public:
-    NDISender();
+    NDISender(int ch);
 
-    NDISender(unsigned int rate, int channels);
+    NDISender(int ch, unsigned int rate, int channels);
 
 private:
     void send_function();
